@@ -24,4 +24,5 @@
     <string name="shoe_description_text">Enter Shoe description</string>
     <string name="save_button">SAVE</string>
     <string name="cancel_button">CANCEL</string>
+    <string name="logout_item_label">Logout</string>
 </resources>
