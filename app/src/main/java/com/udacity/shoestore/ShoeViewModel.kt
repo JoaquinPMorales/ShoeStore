@@ -16,10 +16,47 @@ class ShoeViewModel : ViewModel() {
 
     private var mListOfShoes = ArrayList<Shoe>()
 
+    private val _eventShoeAdded = MutableLiveData<Boolean>()
+
+    val eventShoeAdded : LiveData<Boolean>
+        get() = _eventShoeAdded
+
+    private val _eventShoeCancelled = MutableLiveData<Boolean>()
+
+    val eventShoeCancelled : LiveData<Boolean>
+        get() = _eventShoeCancelled
+
+    init {
+        _eventShoeAdded.value = false
+        _eventShoeCancelled.value = false
+
+    }
+
     fun addNewShoe(newShoe : Shoe)
     {
         Log.i("ShoeViewModel", "AddNewShoe called with name: ${newShoe.getShoeName()}")
         mListOfShoes.add(newShoe)
         _listOfShoes.value = mListOfShoes
+        newShoeAdded()
+    }
+
+    fun saveNewShoe()
+    {
+        _eventShoeAdded.value = true
+    }
+
+    fun newShoeAdded()
+    {
+        _eventShoeAdded.value = false
+    }
+
+    fun cancelNewShoe()
+    {
+        _eventShoeCancelled.value = true
+    }
+
+    fun newShoeCancelled()
+    {
+        _eventShoeCancelled.value = false
     }
 }

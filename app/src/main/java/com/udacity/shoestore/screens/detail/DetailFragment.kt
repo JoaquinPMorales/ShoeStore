@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.udacity.shoestore.R
@@ -32,8 +33,9 @@ class DetailFragment : Fragment() {
         //viewModel = (requireActivity()).get(ShoeViewModel::class.java)
         binding.shoeViewModel = viewModel
         binding.shoeData = shoeObject
+        binding.setLifecycleOwner(this)
 
-        binding.saveButton.setOnClickListener {
+        /*binding.saveButton.setOnClickListener {
             findNavController().navigate(DetailFragmentDirections.actionDetailFragmentToListFragment())
             viewModel.addNewShoe(shoeObject)
             Log.i("DetailFragment", shoeObject.toString())
@@ -41,7 +43,24 @@ class DetailFragment : Fragment() {
 
         binding.cancelButton.setOnClickListener {
             findNavController().navigate(DetailFragmentDirections.actionDetailFragmentToListFragment())
-        }
+        }*/
+
+        viewModel.eventShoeAdded.observe(this, Observer { shoeAdded ->
+            if(shoeAdded)
+            {
+                Log.i("DetailFragment", "Shoe added observed flag")
+                viewModel.addNewShoe(shoeObject)
+                findNavController().navigate(DetailFragmentDirections.actionDetailFragmentToListFragment())
+            }
+        })
+
+        viewModel.eventShoeCancelled.observe(this, Observer { shoeCancelled ->
+            if(shoeCancelled) {
+                Log.i("DetailFragment", "Shoe cancelled observed flag")
+                findNavController().navigate(DetailFragmentDirections.actionDetailFragmentToListFragment())
+                viewModel.newShoeCancelled()
+            }
+        })
 
         return binding.root
     }
